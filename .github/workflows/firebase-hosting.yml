@@ -1,0 +1,33 @@
+name: Deploy to Firebase Hosting
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node (for npm)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Auth to Google (service account JSON)
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Install Firebase CLI
+        run: npm i -g firebase-tools
+
+      - name: Deploy static site to Firebase Hosting
+        run: |
+          firebase use "${{ secrets.FIREBASE_PROJECT_ID }}" --token "" || true
+          firebase deploy --only hosting --project "${{ secrets.FIREBASE_PROJECT_ID }}"
