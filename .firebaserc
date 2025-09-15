@@ -1,0 +1,8 @@
+{
+  "projects": { "default": "tabc-one" },
+  "targets": {
+    "tabc-one": {
+      "hosting": { "site": ["tabc-one"] }
+    }
+  }
+}
